@@ -28,7 +28,7 @@ pub mod Staker {
     use starknet::{get_block_timestamp, get_caller_address, get_contract_address};
     use super::{ContractAddress, IERC20CamelDispatcher, IERC20CamelDispatcherTrait, IStaker};
 
-    const THRESHOLD: u256 = 1000000000000000000; // ONE_ETH_IN_WEI: 10 ^ 18;
+    const THRESHOLD: u256 = 1000000000000000000; //  ONE_ETH_IN_WEI: 10 ^ 18;
     const ONE_DAY: u64 = 86400;
 
     #[event]
