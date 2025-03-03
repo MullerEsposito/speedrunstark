@@ -22,6 +22,7 @@ mod Vendor {
     component!(path: OwnableComponent, storage: ownable, event: OwnableEvent);
 
     // ToDo Checkpoint 2: Define const TokensPerEth
+    const TokensPerEth: u256 = 100;
 
     #[abi(embed_v0)]
     impl OwnableImpl = OwnableComponent::OwnableImpl<ContractState>;
@@ -56,22 +57,37 @@ mod Vendor {
     struct SellTokens {}
 
     #[constructor]
-    // Todo Checkpoint 2: Edit the constructor to initialize the owner of the contract.
     fn constructor(
         ref self: ContractState,
         eth_token_address: ContractAddress,
         your_token_address: ContractAddress,
+        owner: ContractAddress,
     ) {
         self.eth_token.write(IERC20CamelDispatcher { contract_address: eth_token_address });
         self.your_token.write(IYourTokenDispatcher { contract_address: your_token_address });
-        // ToDo Checkpoint 2: Initialize the owner of the contract here.
+        self.ownable.initializer(owner);
     }
     #[abi(embed_v0)]
     impl VendorImpl of IVendor<ContractState> {
-        // ToDo Checkpoint 2: Implement your function buy_tokens here.
         fn buy_tokens(
             ref self: ContractState, eth_amount_wei: u256,
         ) { // Note: In UI and Debug contract `buyer` should call `approve`` before to `transfer` the amount to the `Vendor` contract.
+            let tokens_amount = eth_amount_wei * self.tokens_per_eth();
+            assert!(self.your_token.read().balance_of(get_contract_address()) >= tokens_amount);
+            self.eth_token.read().transferFrom(
+                get_caller_address(),
+                get_contract_address(),
+                eth_amount_wei,
+            );
+            self.your_token.read().transfer(
+                get_caller_address(),
+                tokens_amount
+            );
+            Event::BuyTokens(BuyTokens {
+                buyer: get_caller_address(),
+                eth_amount: eth_amount_wei,
+                tokens_amount,
+            });
         }
 
         // ToDo Checkpoint 2: Implement your function withdraw here.
@@ -82,7 +98,7 @@ mod Vendor {
 
         // ToDo Checkpoint 2: Modify to return the amount of tokens per 1 ETH.
         fn tokens_per_eth(self: @ContractState) -> u256 {
-            0
+            TokensPerEth
         }
 
         fn your_token(self: @ContractState) -> ContractAddress {
