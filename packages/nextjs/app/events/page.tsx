@@ -5,19 +5,21 @@ import { Address } from "~~/components/scaffold-stark/Address";
 import { useScaffoldEventHistory } from "~~/hooks/scaffold-stark/useScaffoldEventHistory";
 import { formatEther } from "ethers";
 
+const fromBlock = 567609n;
+
 const Events: NextPage = () => {
   const { data: buyTokenEvents, isLoading: isBuyEventsLoading } =
     useScaffoldEventHistory({
       contractName: "Vendor",
       eventName: "contracts::Vendor::Vendor::BuyTokens",
-      fromBlock: 0n,
+      fromBlock,
     });
 
   const { data: sellTokenEvents, isLoading: isSellEventsLoading } =
     useScaffoldEventHistory({
       contractName: "Vendor",
       eventName: "contracts::Vendor::Vendor::SellTokens",
-      fromBlock: 0n,
+      fromBlock,
     });
 
   return (

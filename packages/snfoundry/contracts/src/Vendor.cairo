@@ -11,8 +11,8 @@ pub trait IVendor<T> {
 
 #[starknet::contract]
 mod Vendor {
-    use contracts::YourToken::{IYourTokenDispatcher, IYourTokenDispatcherTrait};
-    use core::traits::TryInto;
+    use OwnableComponent::InternalTrait;
+use contracts::YourToken::{IYourTokenDispatcher, IYourTokenDispatcherTrait};
     use openzeppelin_access::ownable::OwnableComponent;
     use openzeppelin_access::ownable::interface::IOwnable;
     use openzeppelin_token::erc20::interface::{IERC20CamelDispatcher, IERC20CamelDispatcherTrait};
@@ -21,7 +21,6 @@ mod Vendor {
 
     component!(path: OwnableComponent, storage: ownable, event: OwnableEvent);
 
-    // ToDo Checkpoint 2: Define const TokensPerEth
     const TokensPerEth: u256 = 100;
 
     #[abi(embed_v0)]
@@ -52,7 +51,6 @@ mod Vendor {
         tokens_amount: u256,
     }
 
-    //  ToDo Checkpoint 3: Define the event SellTokens
     #[derive(Drop, starknet::Event)]
     struct SellTokens {
         seller: ContractAddress,
@@ -73,9 +71,7 @@ mod Vendor {
     }
     #[abi(embed_v0)]
     impl VendorImpl of IVendor<ContractState> {
-        fn buy_tokens(
-            ref self: ContractState, eth_amount_wei: u256,
-        ) { 
+        fn buy_tokens(ref self: ContractState, eth_amount_wei: u256) { 
             let tokens_amount = eth_amount_wei * self.tokens_per_eth();
             assert!(self.your_token.read().balance_of(get_contract_address()) >= tokens_amount);
             self.eth_token.read().transferFrom(
@@ -87,7 +83,7 @@ mod Vendor {
                 get_caller_address(),
                 tokens_amount
             );
-            Event::BuyTokens(BuyTokens {
+            self.emit(BuyTokens {
                 buyer: get_caller_address(),
                 eth_amount: eth_amount_wei,
                 tokens_amount,
@@ -95,14 +91,13 @@ mod Vendor {
         }
 
         fn withdraw(ref self: ContractState) {
-            assert!(self.owner() == get_caller_address());
-            self.your_token.read().transfer(
+            self.ownable.assert_only_owner();
+            self.eth_token.read().transfer(
                 self.owner(),
-                self.your_token.read().balance_of(get_contract_address())
+                self.eth_token.read().balanceOf(get_contract_address())
             );
         }
 
-        // ToDo Checkpoint 3: Implement your function sell_tokens here.
         fn sell_tokens(ref self: ContractState, amount_tokens: u256) {
             let seller_balance = self.your_token.read().balance_of(get_caller_address());
             assert!(seller_balance >= amount_tokens);
@@ -116,7 +111,7 @@ mod Vendor {
                 get_caller_address(),
                 eth_amount
             );
-            Event::SellTokens(SellTokens { 
+            self.emit(SellTokens { 
                 seller: get_caller_address(),
                 eth_amount,
                 tokens_amount: amount_tokens,
