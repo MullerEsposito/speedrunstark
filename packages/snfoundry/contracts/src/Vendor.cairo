@@ -54,7 +54,11 @@ mod Vendor {
 
     //  ToDo Checkpoint 3: Define the event SellTokens
     #[derive(Drop, starknet::Event)]
-    struct SellTokens {}
+    struct SellTokens {
+        seller: ContractAddress,
+        eth_amount: u256,
+        tokens_amount: u256,
+    }
 
     #[constructor]
     fn constructor(
@@ -71,7 +75,7 @@ mod Vendor {
     impl VendorImpl of IVendor<ContractState> {
         fn buy_tokens(
             ref self: ContractState, eth_amount_wei: u256,
-        ) { // Note: In UI and Debug contract `buyer` should call `approve`` before to `transfer` the amount to the `Vendor` contract.
+        ) { 
             let tokens_amount = eth_amount_wei * self.tokens_per_eth();
             assert!(self.your_token.read().balance_of(get_contract_address()) >= tokens_amount);
             self.eth_token.read().transferFrom(
@@ -90,13 +94,35 @@ mod Vendor {
             });
         }
 
-        // ToDo Checkpoint 2: Implement your function withdraw here.
-        fn withdraw(ref self: ContractState) {}
+        fn withdraw(ref self: ContractState) {
+            assert!(self.owner() == get_caller_address());
+            self.your_token.read().transfer(
+                self.owner(),
+                self.your_token.read().balance_of(get_contract_address())
+            );
+        }
 
         // ToDo Checkpoint 3: Implement your function sell_tokens here.
-        fn sell_tokens(ref self: ContractState, amount_tokens: u256) {}
+        fn sell_tokens(ref self: ContractState, amount_tokens: u256) {
+            let seller_balance = self.your_token.read().balance_of(get_caller_address());
+            assert!(seller_balance >= amount_tokens);
+            let eth_amount = amount_tokens / self.tokens_per_eth();
+            self.your_token.read().transfer_from(
+                get_caller_address(),
+                get_contract_address(),
+                amount_tokens
+            );
+            self.eth_token.read().transfer(
+                get_caller_address(),
+                eth_amount
+            );
+            Event::SellTokens(SellTokens { 
+                seller: get_caller_address(),
+                eth_amount,
+                tokens_amount: amount_tokens,
+            });
+        }
 
-        // ToDo Checkpoint 2: Modify to return the amount of tokens per 1 ETH.
         fn tokens_per_eth(self: @ContractState) -> u256 {
             TokensPerEth
         }
