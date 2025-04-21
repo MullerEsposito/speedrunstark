@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     DiceGame: {
       address:
-        "0x57e0d6edd5182eebb587389f7221561915cf0a9c10a8ee3b941ff4051853c34",
+        "0x3980a1969456e26087757f02a95cf1e4c5a28d947e2e30e639cbc67ad436364",
       abi: [
         {
           type: "impl",
@@ -172,7 +172,7 @@ const deployedContracts = {
     },
     RiggedRoll: {
       address:
-        "0x2412d69a9fb18e616306306392a8fe2c247155c74f11825447c27782c61b1e1",
+        "0x492faa2343afea3ab33ea2dcd06a5accdb6e8366cabf0e5257eb0a0fe86f47d",
       abi: [
         {
           type: "impl",
@@ -390,18 +390,18 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x36b3ea4d3702d9ae0d912a070a2a3a457b0cc890266c471a91c31c634553058",
+        "0x26473b0099057c585b73982b2120290c5213924be12b516a6b285cc2c530e0f",
     },
   },
   sepolia: {
-    YourToken: {
+    DiceGame: {
       address:
-        "0x50d4a02c0aac2d920d5aca604317f18e4559f7e2fc1a7457dea41a5dea63f94",
+        "0x35f70b0b21d5b7cada1db46c3b7fd85c30dffc815c4bd122b9ec46d70bfc9aa",
       abi: [
         {
           type: "impl",
-          name: "IYourTokenImpl",
-          interface_name: "openzeppelin_token::erc20::interface::IERC20",
+          name: "DiceGameImpl",
+          interface_name: "contracts::DiceGame::IDiceGame",
         },
         {
           type: "struct",
@@ -418,193 +418,71 @@ const deployedContracts = {
           ],
         },
         {
-          type: "enum",
-          name: "core::bool",
-          variants: [
-            {
-              name: "False",
-              type: "()",
-            },
-            {
-              name: "True",
-              type: "()",
-            },
-          ],
-        },
-        {
-          type: "interface",
-          name: "openzeppelin_token::erc20::interface::IERC20",
-          items: [
-            {
-              type: "function",
-              name: "total_supply",
-              inputs: [],
-              outputs: [
-                {
-                  type: "core::integer::u256",
-                },
-              ],
-              state_mutability: "view",
-            },
-            {
-              type: "function",
-              name: "balance_of",
-              inputs: [
-                {
-                  name: "account",
-                  type: "core::starknet::contract_address::ContractAddress",
-                },
-              ],
-              outputs: [
-                {
-                  type: "core::integer::u256",
-                },
-              ],
-              state_mutability: "view",
-            },
-            {
-              type: "function",
-              name: "allowance",
-              inputs: [
-                {
-                  name: "owner",
-                  type: "core::starknet::contract_address::ContractAddress",
-                },
-                {
-                  name: "spender",
-                  type: "core::starknet::contract_address::ContractAddress",
-                },
-              ],
-              outputs: [
-                {
-                  type: "core::integer::u256",
-                },
-              ],
-              state_mutability: "view",
-            },
-            {
-              type: "function",
-              name: "transfer",
-              inputs: [
-                {
-                  name: "recipient",
-                  type: "core::starknet::contract_address::ContractAddress",
-                },
-                {
-                  name: "amount",
-                  type: "core::integer::u256",
-                },
-              ],
-              outputs: [
-                {
-                  type: "core::bool",
-                },
-              ],
-              state_mutability: "external",
-            },
-            {
-              type: "function",
-              name: "transfer_from",
-              inputs: [
-                {
-                  name: "sender",
-                  type: "core::starknet::contract_address::ContractAddress",
-                },
-                {
-                  name: "recipient",
-                  type: "core::starknet::contract_address::ContractAddress",
-                },
-                {
-                  name: "amount",
-                  type: "core::integer::u256",
-                },
-              ],
-              outputs: [
-                {
-                  type: "core::bool",
-                },
-              ],
-              state_mutability: "external",
-            },
-            {
-              type: "function",
-              name: "approve",
-              inputs: [
-                {
-                  name: "spender",
-                  type: "core::starknet::contract_address::ContractAddress",
-                },
-                {
-                  name: "amount",
-                  type: "core::integer::u256",
-                },
-              ],
-              outputs: [
-                {
-                  type: "core::bool",
-                },
-              ],
-              state_mutability: "external",
-            },
-          ],
-        },
-        {
-          type: "impl",
-          name: "ERC20MetadataImpl",
-          interface_name:
-            "openzeppelin_token::erc20::interface::IERC20Metadata",
-        },
-        {
           type: "struct",
-          name: "core::byte_array::ByteArray",
+          name: "openzeppelin_token::erc20::interface::IERC20CamelDispatcher",
           members: [
             {
-              name: "data",
-              type: "core::array::Array::<core::bytes_31::bytes31>",
-            },
-            {
-              name: "pending_word",
-              type: "core::felt252",
-            },
-            {
-              name: "pending_word_len",
-              type: "core::integer::u32",
+              name: "contract_address",
+              type: "core::starknet::contract_address::ContractAddress",
             },
           ],
         },
         {
           type: "interface",
-          name: "openzeppelin_token::erc20::interface::IERC20Metadata",
+          name: "contracts::DiceGame::IDiceGame",
           items: [
             {
               type: "function",
-              name: "name",
+              name: "roll_dice",
+              inputs: [
+                {
+                  name: "amount",
+                  type: "core::integer::u256",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "last_dice_value",
               inputs: [],
               outputs: [
                 {
-                  type: "core::byte_array::ByteArray",
+                  type: "core::integer::u256",
                 },
               ],
               state_mutability: "view",
             },
             {
               type: "function",
-              name: "symbol",
+              name: "nonce",
               inputs: [],
               outputs: [
                 {
-                  type: "core::byte_array::ByteArray",
+                  type: "core::integer::u256",
                 },
               ],
               state_mutability: "view",
             },
             {
               type: "function",
-              name: "decimals",
+              name: "prize",
               inputs: [],
               outputs: [
                 {
-                  type: "core::integer::u8",
+                  type: "core::integer::u256",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "eth_token_dispatcher",
+              inputs: [],
+              outputs: [
+                {
+                  type: "openzeppelin_token::erc20::interface::IERC20CamelDispatcher",
                 },
               ],
               state_mutability: "view",
@@ -616,28 +494,28 @@ const deployedContracts = {
           name: "constructor",
           inputs: [
             {
-              name: "recipient",
+              name: "eth_token_address",
               type: "core::starknet::contract_address::ContractAddress",
             },
           ],
         },
         {
           type: "event",
-          name: "openzeppelin_token::erc20::erc20::ERC20Component::Transfer",
+          name: "contracts::DiceGame::DiceGame::Roll",
           kind: "struct",
           members: [
             {
-              name: "from",
+              name: "player",
               type: "core::starknet::contract_address::ContractAddress",
               kind: "key",
             },
             {
-              name: "to",
-              type: "core::starknet::contract_address::ContractAddress",
-              kind: "key",
+              name: "amount",
+              type: "core::integer::u256",
+              kind: "data",
             },
             {
-              name: "value",
+              name: "roll",
               type: "core::integer::u256",
               kind: "data",
             },
@@ -645,21 +523,16 @@ const deployedContracts = {
         },
         {
           type: "event",
-          name: "openzeppelin_token::erc20::erc20::ERC20Component::Approval",
+          name: "contracts::DiceGame::DiceGame::Winner",
           kind: "struct",
           members: [
             {
-              name: "owner",
+              name: "winner",
               type: "core::starknet::contract_address::ContractAddress",
-              kind: "key",
+              kind: "data",
             },
             {
-              name: "spender",
-              type: "core::starknet::contract_address::ContractAddress",
-              kind: "key",
-            },
-            {
-              name: "value",
+              name: "amount",
               type: "core::integer::u256",
               kind: "data",
             },
@@ -667,45 +540,33 @@ const deployedContracts = {
         },
         {
           type: "event",
-          name: "openzeppelin_token::erc20::erc20::ERC20Component::Event",
+          name: "contracts::DiceGame::DiceGame::Event",
           kind: "enum",
           variants: [
             {
-              name: "Transfer",
-              type: "openzeppelin_token::erc20::erc20::ERC20Component::Transfer",
+              name: "Roll",
+              type: "contracts::DiceGame::DiceGame::Roll",
               kind: "nested",
             },
             {
-              name: "Approval",
-              type: "openzeppelin_token::erc20::erc20::ERC20Component::Approval",
+              name: "Winner",
+              type: "contracts::DiceGame::DiceGame::Winner",
               kind: "nested",
-            },
-          ],
-        },
-        {
-          type: "event",
-          name: "contracts::YourToken::YourToken::Event",
-          kind: "enum",
-          variants: [
-            {
-              name: "ERC20Event",
-              type: "openzeppelin_token::erc20::erc20::ERC20Component::Event",
-              kind: "flat",
             },
           ],
         },
       ],
       classHash:
-        "0x1f9c7382830f63ec6fbb68a5971fc7586745c5f909e2aa4a5ef24e872c5ba9d",
+        "0x47dc9297721173b8476da1d32c9c559cdfd1148e758c3b8ca9ad49658ed0bb5",
     },
-    Vendor: {
+    RiggedRoll: {
       address:
-        "0x21f39cda4b6d1cbfcc2aa933c017cc871ea5ee2f5106662b46b2feb6fe4b0ae",
+        "0x5375686637c85cca03cb580475065ab28d3b64ec759ccd1617fef12d4729a8a",
       abi: [
         {
           type: "impl",
-          name: "VendorImpl",
-          interface_name: "contracts::Vendor::IVendor",
+          name: "RiggedRollImpl",
+          interface_name: "contracts::RiggedRoll::IRiggedRoll",
         },
         {
           type: "struct",
@@ -722,15 +583,25 @@ const deployedContracts = {
           ],
         },
         {
+          type: "struct",
+          name: "contracts::DiceGame::IDiceGameDispatcher",
+          members: [
+            {
+              name: "contract_address",
+              type: "core::starknet::contract_address::ContractAddress",
+            },
+          ],
+        },
+        {
           type: "interface",
-          name: "contracts::Vendor::IVendor",
+          name: "contracts::RiggedRoll::IRiggedRoll",
           items: [
             {
               type: "function",
-              name: "buy_tokens",
+              name: "rigged_roll",
               inputs: [
                 {
-                  name: "eth_amount_wei",
+                  name: "amount",
                   type: "core::integer::u256",
                 },
               ],
@@ -740,16 +611,13 @@ const deployedContracts = {
             {
               type: "function",
               name: "withdraw",
-              inputs: [],
-              outputs: [],
-              state_mutability: "external",
-            },
-            {
-              type: "function",
-              name: "sell_tokens",
               inputs: [
                 {
-                  name: "amount_tokens",
+                  name: "to",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+                {
+                  name: "amount",
                   type: "core::integer::u256",
                 },
               ],
@@ -758,7 +626,7 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "tokens_per_eth",
+              name: "last_dice_value",
               inputs: [],
               outputs: [
                 {
@@ -769,22 +637,22 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "your_token",
+              name: "predicted_roll",
               inputs: [],
               outputs: [
                 {
-                  type: "core::starknet::contract_address::ContractAddress",
+                  type: "core::integer::u256",
                 },
               ],
               state_mutability: "view",
             },
             {
               type: "function",
-              name: "eth_token",
+              name: "dice_game_dispatcher",
               inputs: [],
               outputs: [
                 {
-                  type: "core::starknet::contract_address::ContractAddress",
+                  type: "contracts::DiceGame::IDiceGameDispatcher",
                 },
               ],
               state_mutability: "view",
@@ -837,11 +705,7 @@ const deployedContracts = {
           name: "constructor",
           inputs: [
             {
-              name: "eth_token_address",
-              type: "core::starknet::contract_address::ContractAddress",
-            },
-            {
-              name: "your_token_address",
+              name: "dice_game_address",
               type: "core::starknet::contract_address::ContractAddress",
             },
             {
@@ -903,51 +767,7 @@ const deployedContracts = {
         },
         {
           type: "event",
-          name: "contracts::Vendor::Vendor::BuyTokens",
-          kind: "struct",
-          members: [
-            {
-              name: "buyer",
-              type: "core::starknet::contract_address::ContractAddress",
-              kind: "data",
-            },
-            {
-              name: "eth_amount",
-              type: "core::integer::u256",
-              kind: "data",
-            },
-            {
-              name: "tokens_amount",
-              type: "core::integer::u256",
-              kind: "data",
-            },
-          ],
-        },
-        {
-          type: "event",
-          name: "contracts::Vendor::Vendor::SellTokens",
-          kind: "struct",
-          members: [
-            {
-              name: "seller",
-              type: "core::starknet::contract_address::ContractAddress",
-              kind: "data",
-            },
-            {
-              name: "eth_amount",
-              type: "core::integer::u256",
-              kind: "data",
-            },
-            {
-              name: "tokens_amount",
-              type: "core::integer::u256",
-              kind: "data",
-            },
-          ],
-        },
-        {
-          type: "event",
-          name: "contracts::Vendor::Vendor::Event",
+          name: "contracts::RiggedRoll::RiggedRoll::Event",
           kind: "enum",
           variants: [
             {
@@ -955,21 +775,11 @@ const deployedContracts = {
               type: "openzeppelin_access::ownable::ownable::OwnableComponent::Event",
               kind: "flat",
             },
-            {
-              name: "BuyTokens",
-              type: "contracts::Vendor::Vendor::BuyTokens",
-              kind: "nested",
-            },
-            {
-              name: "SellTokens",
-              type: "contracts::Vendor::Vendor::SellTokens",
-              kind: "nested",
-            },
           ],
         },
       ],
       classHash:
-        "0x282375b80158f468598a57b0e958f45b0f3b3cfbbbb3fa38e2dd724c63c7647",
+        "0x709e298117f24dcdca4df5901daa95fc1add05b93bb168d1667deba99d9ff0f",
     },
   },
 } as const;
